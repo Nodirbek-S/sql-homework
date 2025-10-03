@@ -1,17 +1,17 @@
 Easy
 
 1. Define the following terms: data, database, relational database, and table.
-- **Data (Ma’lumot)** — Faktlar, raqamlar, belgilar yoki matnlar ko‘rinishidagi xom axborotlar bo‘lib, ular tahlil qilish orqali ma’no kasb etadi. Ular matn, kuzatuvlar, raqamlar, rasmlar, grafiklar yoki belgilar ko‘rinishida bo‘lishi mumkin. Masalan, ma’lumot sifatida quyidagilar keltirilishi mumkin: narxlar, og‘irliklar, manzillar, yoshlar, ismlar, harorat, sana yoki masofalar.
-- **Database (Ma’lumotlar bazasi)** — Tartiblangan va tizimlashtirilgan ma’lumotlar to‘plami bo‘lib, ularni saqlash, boshqarish va izlash imkonini beradi.
-- **Relational Database (Aloqador ma’lumotlar bazasi)** — Ma’lumotlarni jadval ko‘rinishida, ya’ni ustunlar (kolonkalar) va satrlar (qatorlar) shaklida saqlovchi hamda jadvallar orasida bog‘lanishlar (kalitlar) orqali aloqani ta’minlovchi tizim.
-- **Table (Jadval)** — Ma’lumotlarni strukturaviy saqlash birligi bo‘lib, ustunlar orqali maydonlar, qatorlar orqali yozuvlar ifodalanadi.
+- Data (Ma’lumot) — Faktlar, raqamlar, belgilar yoki matnlar ko‘rinishidagi xom axborotlar bo‘lib, ular tahlil qilish orqali ma’no kasb etadi. Ular matn, kuzatuvlar, raqamlar, rasmlar, grafiklar yoki belgilar ko‘rinishida bo‘lishi mumkin. Masalan, ma’lumot sifatida quyidagilar keltirilishi mumkin: narxlar, og‘irliklar, manzillar, yoshlar, ismlar, harorat, sana yoki masofalar.
+- Database (Ma’lumotlar bazasi) — Tartiblangan va tizimlashtirilgan ma’lumotlar to‘plami bo‘lib, ularni saqlash, boshqarish va izlash imkonini beradi.
+- Relational Database (Aloqador ma’lumotlar bazasi) — Ma’lumotlarni jadval ko‘rinishida, ya’ni ustunlar (kolonkalar) va satrlar (qatorlar) shaklida saqlovchi hamda jadvallar orasida bog‘lanishlar (kalitlar) orqali aloqani ta’minlovchi tizim.
+- Table (Jadval) — Ma’lumotlarni strukturaviy saqlash birligi bo‘lib, ustunlar orqali maydonlar, qatorlar orqali yozuvlar ifodalanadi.
 
 2. List five key features of SQL Server.
 - Aloqador (relatsion) ma’lumotlar bazasi tizimi sifatida ishlaydi.
-- Foydalanuvchilar uchun qulay bo’lgan interfeys — **SQL Server Management Studio (SSMS)** orqali boshqariladi.
-- **Kuchli xavfsizlik tizimi** — foydalanuvchi huquqlari va autentifikatsiya.
-- **Zaxira va tiklash (Backup and Restore)** imkoniyatlari mavjud.
-- **Triggers, Stored Procedures** va **Functions** orqali murakkab amallarni avtomatlashtirish imkonini beradi.
+- Foydalanuvchilar uchun qulay bo’lgan interfeys — SQL Server Management Studio (SSMS) orqali boshqariladi.
+- Kuchli xavfsizlik tizimi — foydalanuvchi huquqlari va autentifikatsiya.
+- Zaxira va tiklash (Backup and Restore) imkoniyatlari mavjud.
+- Triggers, Stored Procedures va Functions orqali murakkab amallarni avtomatlashtirish imkonini beradi.
 
 3. What are the different authentication modes available when connecting to SQL Server? (Give at least 2)
 
@@ -44,15 +44,15 @@ Hard
 
 1. Research and explain the different SQL commands: DQL, DML, DDL, DCL, TCL with examples.
 
-DQL (Data Query Language - Ma’lumotlarni so‘rash): `Select * from Students;`
+DQL (Data Query Language - Ma’lumotlarni so‘rash): `Select * from Students; Select * from dbo.Students; • Select Age, count(*) from dbo.Students group by Age;
 
-DML (Data Manipulation Language - Ma’lumotlar ustida amallar (o‘zgartirish, qo‘shish, o‘chirish)): `Insert`, `Update`, `Delete`
+DML (Data Manipulation Language - Ma’lumotlar ustida amallar (o‘zgartirish, qo‘shish, o‘chirish)): Insert, Update, Delete, insert into dbo.Students values (1,'Sobir',20); update dbo.Students set Age=21 where StudentID=1; delete from dbo.Students where StudentID=3;
 
-DDL (Data Definition Language - Tuzilmalarni yaratish va o‘zgartirish): `Create Table`, `Alter table`
+DDL (Data Definition Language - Tuzilmalarni yaratish va o‘zgartirish): Create Table, Alter table, Create Table, Alter table dbo.Students add email varchar(100); drop table dbo.Students;
 
-DCL (**Data Control Language - Huquqlarni boshqarish): `Grant`, `Revoke`
+DCL (**Data Control Language - Huquqlarni boshqarish): Grant, Revoke, Grant select on dbo.students to [ReaderRole]; revoke insert on dbo.Students from [UserA];
 
-TCL (**Transaction Control Language - Tranzaksiyalarni boshqarish): `Begin`, `Commit`, `Rollback`
+TCL (**Transaction Control Language - Tranzaksiyalarni boshqarish): Begin, Commit, Rollback, Begin Tran; update ...; if @@error<>0 rollback; else Commit;
 
 2. Write a query to insert three records into the Students table.
 
