@@ -1,147 +1,261 @@
-----------------------------------------Basic-Level Tasks (10)------------------------------------
+create database "lesson 3"
 
--- 1. Create a table Employees with columns: EmpID INT, Name (VARCHAR(50)), and Salary (DECIMAL(10,2)).
-	
-	create table Employees (
-    EmpID int,
-    Name varchar(50),
-    Salary decimal(10,2));
+use "lesson 3"
 
--- 2. Insert three records into the Employees table using different INSERT INTO approaches (single-row insert and multiple-row insert).
-	
-	insert into Employees (EmpID, Name, Salary)
-	values (1, 'Ali', 6500.00);
+----------------------------------------Easy-Level Tasks (10)------------------------------------
 
-	insert into Employees (EmpID, Name, Salary)
-	values (2, 'Malika', 5200.00),
-		   (3, 'Javlon', 4800.00);
+-- 1. Define and explain the purpose of BULK INSERT in SQL Server.
+BULK INSERT - tashqi fayldan (odatda katta hajmli) ma’lumotlarni tezkor tarzda to‘g‘ridan-to‘g‘ri jadvalga yuklash uchun ishlatiladigan T-SQL operator.
 
--- 3. Update the Salary of an employee to 7000 where EmpID = 1.
-	
-	update Employees 
-	set Salary = 7000
-	where EmpID = 1
+Maqsadlari:
+-Katta hajmdagi CSV/TXT fayllarni jadvalga tez yuklash
+-ETL jarayonlarini soddalashtirish (logistika, audit, arxiv ma’lumotlarni olib kirish)
+-Tarmoq va diskdan samarali foydalanish (batched, minimal logging sharoitida)
 
--- 4. Delete a record from the Employees table where EmpID = 2.
+Minimal misol:
+BULK INSERT dbo.Products
+FROM 'C:\Data\products.csv'
+WITH (
+    FIRSTROW = 2, -- 1-satr sarlavha bo‘lsa
+    FIELDTERMINATOR = ',', -- maydon ajratgich
+    ROWTERMINATOR   = '\n', -- qator ajratgich
+    TABLOCK -- tezroq yuklash uchun
+);
 
-	delete from Employees
-	where EmpID = 2
+-- 2. List four file formats that can be imported into SQL Server.
+	1. CSV (Vergul bilan ajratilgan matn)
+	CSV (Comma-Separated Values) — ma`lumotlar vergul bilan ajratilgan soddalashtirilgan matn formatidir. Ko`pincha ma`lumotlarni boshqa tizimlar yoki elektron jadvallar (masalan, Excel) bilan eksport qilishda ishlatiladi.
+	Import qilish usuli:
+	BULK INSERT: Bu metod katta hajmdagi CSV fayllarni tezda jadvalga import qilish uchun ishlatiladi.
+	OPENROWSET: BULK yoki BULK INSERTdan foydalanmasdan, OPENROWSET yordamida ma`lumotlarni fayldan SQL Serverga yuklash mumkin.
 
--- 5. Give a brief definition for difference between DELETE, TRUNCATE, and DROP.
--- DELETE: tanlangan qatorlarni o'chiradi (WHERE ishlaydi), jadval qoladi.
--- TRUNCATE: barcha qatorlarni o'chiradi, jadval qoladi, tezroq ishlaydi.
--- DROP: jadvalning o'zi va tuzilmasi o'chiriladi.
+	Afzalliklari:
+	Oson va keng qo‘llaniladi.
+	Faqat matn formatida bo‘lgan ma’lumotlar uchun yaxshi ishlaydi.
+	Cheklovlari:
+	Maydonlar orasidagi ajratgichni aniq bilish kerak (odatda vergul, lekin boshqalar ham bo‘lishi mumkin).
+	Ma`lumotlar turini aniqlashda ba`zi qiyinchiliklar bo`lishi mumkin.
 
--- 6. Modify the Name column in the Employees table to VARCHAR(100).
-	
-	alter table Employees
-	alter column Name varchar(100)
+2. TXT (Delimiterli matn)
 
--- 7. Add a new column Department (VARCHAR(50)) to the Employees table.
-	alter table Employees
-	add Department varchar(50)
+	TXT — bu oddiy matnli fayl bo‘lib, ma’lumotlar orasidagi ajratgichlar har qanday belgi bo‘lishi mumkin, masalan: tab, nuqta-vergul, probellar va boshqalar.
+	Import qilish usuli:
+	BULK INSERT va OPENROWSET yordamida TXT faylini import qilish mumkin, faqat ajratgichni aniq belgilash kerak.
 
--- 8. Change the data type of the Salary column to FLOAT.
+	Afzalliklari:
+	Har xil formatda bo‘lgan ma’lumotlar bilan ishlash mumkin.
+	Kengaytirilgan formatlar bilan ishlash imkoniyati mavjud (masalan, tab yoki nuqta-vergul).
+	Cheklovlari:
+	Faylni to`g`ri formatda yaratish zarur (maydon ajratgichlarini aniq belgilash).
 
-	alter table Employees
-	alter column Salary float
+3. JSON (JavaScript Object Notation)
+	JSON — ma`lumotlarni saqlash va uzatish uchun ishlatiladigan eng mashhur formatlardan biri bo‘lib, asosan strukturaviy ma`lumotlar uchun ishlatiladi. JSON fayllarida ma`lumotlar kalit-qiymat juftliklaridan tashkil topgan bo‘ladi.
+	Import qilish usuli:
+	OPENROWSET yoki SQL Server Integration Services (SSIS) yordamida JSON fayllarni import qilish mumkin.
+	SQL Server 2016 va undan keyingi versiyalarda JSON fayllarni o`qish uchun FOR JSON va OPENJSON funksiyalari qo`llaniladi.
 
--- 9. Create another table Departments with columns DepartmentID (INT, PRIMARY KEY) and DepartmentName (VARCHAR(50)).
+	Afzalliklari:
+	Ma`lumotlar kengaytirilgan formatda va ierarxik tuzilishga ega.
+	Oson tahlil qilish va ko‘p darajali ma’lumotlar bilan ishlash imkonini beradi.
+	Cheklovlari:
+	Katta hajmdagi JSON fayllarni ishlashda qiyinchiliklar bo‘lishi mumkin (kengaytirilgan struktura).
 
-	create table Departments (DepartmentID int primary key,
-							DepartmentName varchar(50))
+4. XML (Extensible Markup Language)
+	XML — bu strukturaviy ma’lumotlarni saqlash formati bo‘lib, taglar orqali ma`lumotlar tashkil etiladi. XML fayllari odatda murakkab ma`lumotlarni ifodalash uchun ishlatiladi.
+	Import qilish usuli:
+	OPENROWSET yoki SSIS yordamida XML fayllarni import qilish mumkin.
+	SQL Server`da XML fayllarni import qilishda XML ma`lumotlarni o`qish va tahlil qilish uchun XQuery yoki FOR XML funksiyalari ishlatiladi.
+	Afzalliklari:
+	XML kengaytirilgan va murakkab ma`lumotlarni saqlash uchun juda qulay.
+	Tuzilmani saqlab qoladi, shuning uchun ierarxik va tarmoqli ma`lumotlar uchun ishlatiladi.
+	Cheklovlari:
+	Katta XML fayllari bilan ishlashda sekin ishlash va ko`p resurslar sarflash mumkin.
 
--- 10. Remove all records from the Employees table without deleting its structure.
+5. Excel (XLS/XLSX) va boshqa formatlar
+Excel fayllarini SQL Serverga import qilish uchun SQL Server Integration Services (SSIS) ishlatiladi. PolyBase va OPENROWSET yordamida Excel va boshqa turdagi fayllarni SQL Serverga import qilish mumkin.
 
-	Truncate table Employees
+-- 3. Create a table Products with columns: ProductID (INT, PRIMARY KEY), ProductName (VARCHAR(50)), Price (DECIMAL(10,2)).
+	Create table Products (ProductID int primary key, ProductName varchar(50), Price decimal (10,2));
+	GO
 
--------------------------------Intermediate-Level Tasks (6)------------------------------
+-- 4. Insert three records into the Products table using INSERT INTO.
+	select * from Products
 
--- 11. Insert five records into the Departments table using INSERT INTO SELECT method(you can write anything you want as data).
+	Insert into Products (ProductID, ProductName, Price) values
+	(1, 'Apple', 40), (2, 'Peach', 50), (3, 'Banana', 25);
 
-	insert into Departments (DepartmentID, DepartmentName)
-	values (1,'HR'),
-	(2, 'Finance'),
-	(3, 'Budget'),
-	(4, 'Strategy'),
-	(5, 'IT');
+-- 5. Explain the difference between NULL and NOT NULL.
+		NULL — qiymat noma’lum/yo‘q ekanini bildiradi (bo‘sh satr yoki 0 emas).
+		NOT NULL — ustunda albatta qiymat bo‘lishi shart; NULL kiritib bo‘lmaydi.
 
--- 12. Update the Department of all employees where Salary > 5000 to 'Management'.
-	
-	update  employees
-	set salary='Management'
-	where salary>5000
+-- 6. Add a UNIQUE constraint to the ProductName column in the Products table.
+	Alter table dbo.Products
+	Add constraint uq_Products_ProductName Unique (ProductName);
+	go
 
---13. Write a query that removes all employees but keeps the table structure intact.
-	
-	Delete from Employees
+-- 7. Write a comment in a SQL query explaining its purpose.
+/*Bu bilan bir xil nomdagi mahsulotni ikki marta kiritish bloklanadi.*/
 
---14. Drop the Department column from the Employees table.
-	
-	alter table Employees
-	drop column Department;
+-- 8. Add CategoryID column to the Products table.
 
---15. Rename the Employees table to StaffMembers using SQL commands.
-	
-	Exec sp_rename 'Employees', 'StaffMembers';
+	alter table dbo.Products
+	add  CategoryID int null;
+	go
 
---16. Write a query to completely remove the Departments table from the database.
-	
-	drop table if exists Departments
+	select * from Products
 
-----------------------------------------------Advanced-Level Tasks (9)-----------------------------------------
+-- 9. Create a table Categories with a CategoryID as PRIMARY KEY and a CategoryName as UNIQUE.
 
---17. Create a table named Products with at least 5 columns,
---including: ProductID (Primary Key), ProductName (VARCHAR), Category (VARCHAR), Price (DECIMAL)
-	
-	DROP TABLE IF EXISTS PRODUCTS
-	Create table Products(
-		ProductID INT primary key, 
-		ProductName varchar(50), 
-		Category varchar(50), 
-		Price DECIMAL (10,2)
-		);
+	create table Categories 
+		(CategoryID int primary key, 
+		CategoryName varchar(50) unique,
+		 ProductID int foreign key references Categories(CategoryID))
 
---18 Add a CHECK constraint to ensure Price is always greater than 0.
-	
-	Alter table Products
+-- 10. Explain the purpose of the IDENTITY column in SQL Server.
+
+	IDENTITY — avtomatik ketma-ket raqam beruvchi ustun.
+
+	Maqsadlari:
+	Yagona va oson birlamchi kalit hosil qilish
+
+	Qo‘lda ID kiritishni talab qilmaslik
+
+	itilgan har bir yozuvga avtomatik inkrement berish (masalan, IDENTITY(1,1) 1 dan boshlab har safar 1 ga oshiradi)
+
+	Misol:
+		CREATE TABLE dbo.Orders (
+			OrderID INT IDENTITY(1,1) PRIMARY KEY,  -- 1, 2, 3, ...
+			OrderDate DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+);
+
+----------------------------------------Medium-Level Tasks (10)------------------------------------
+
+-- 11. Use BULK INSERT to import data from a text file into the Products table.
+		ProductID,ProductName,Price,CategoryID
+		1,Apple,1.50,10
+		2,Banana,0.90,10
+		3,Mango,2.40,10
+
+	Import:
+	BULK INSERT dbo.Products
+	from 'C:\Data\products.txt'
+	with (firstrow = 2, fieldterminator = ',', rowterminator = '\r\n', tablock );
+
+	select * from Products
+
+-- 12. Create a FOREIGN KEY in the Products table that references the Categories table.
+
+	Alter Table dbo.Products
+	add constraint FK_Products_Categories
+	foreign key (CategoryID)
+	references dbo.Categories(CategoryID)
+	on delete cascade
+	on update cascade;
+
+
+-- 13. Explain the differences between PRIMARY KEY and UNIQUE KEY.
+
+/*PRIMARY KEY:
+
+	Jadvaldagi asosiy identifikator (birlamchi kalit) bo‘lib, har bir satrni yagona qilib ajratib turadi.
+	Har bir jadvalda faqat bitta PRIMARY KEY bo‘lishi mumkin.
+	PRIMARY KEY ustun(lar)i NULL qiymat qabul qilmaydi.
+	Avtomatik ravishda CLUSTERED INDEX yaratiladi (agar boshqa indeks bo‘lmasa).
+	Jadval orasidagi FOREIGN KEY bog‘lanishlari odatda PRIMARY KEY orqali o‘rnatiladi.
+
+	UNIQUE KEY:
+	Jadvaldagi qiymatlar takrorlanmasligini ta’minlaydi, lekin PRIMARY KEY emas.
+	Jadvalda bir nechta UNIQUE KEY bo‘lishi mumkin.
+	NULL qiymatni qabul qilishi mumkin (SQL Server’da har bir UNIQUE ustun uchun bitta NULL ruxsat etiladi).
+	Odatda NONCLUSTERED INDEX yaratiladi.
+	PRIMARY KEY — jadvalning “asosiy identifikatori”, ma’lumotlar yaxlitligi uchun ishlatiladi.
+	UNIQUE KEY — ma’lum bir ustundagi qiymatlar takrorlanmasligini ta’minlaydi, lekin asosiy kalit emas.
+*/
+
+-- 14. Add a CHECK constraint to the Products table ensuring Price > 0.
+
+	Alter table dbo.Products
 	add constraint CK_Products_Price_Positive
-	check (Price > 0);
+	check (price > 0);
 
---19. Modify the table to add a StockQuantity column with a DEFAULT value of 50.
-	
-	Alter table Products
-	add StockQuantity int constraint DF_Products_Stock default 50;
-
---20. Rename Category to ProductCategory
-	
-	Exec sp_rename 'Products.Category', 'ProductCategory', 'COLUMN';
+-- 15. Modify the Products table to add a column Stock (INT, NOT NULL).
 
 
---21. Insert 5 records into the Products table using standard INSERT INTO queries.
 
-	insert into Products (ProductID, ProductName) values 
-	
-	(1,'Apple'), 
-	(2,'Banana'), 
-	(3,'Lemon'), 
-	(4,'Peach'), 
-	(5,'Mango'); 
+-- 16. Use the ISNULL function to replace NULL values in Price column with a 0.
 
---22. Use SELECT INTO to create a backup table called Products_Backup containing all Products data.
+	Alter table dbo.Products
+	add stock int not null
+	constraint DF_Products_Stock default (0);
 
-	Select *into Products_Backup from Products;
+-- 17. Describe the purpose and usage of FOREIGN KEY constraints in SQL Server.
 
---23. Rename the Products table to Inventory.
+	/*FOREIGN KEY — bu tashqi kalit bo‘lib, u bitta jadvaldagi ustunni (yoki ustunlar guruhini) boshqa jadvaldagi PRIMARY yoki UNIQUE KEY bilan bog‘laydi.
+	Bu cheklov referensial yaxlitlikni (referential integrity) ta’minlaydi — ya’ni ma’lumotlar o‘rtasida mantiqiy bog‘liqlikni saqlaydi.
 
-exec sp_rename 'Products', 'Inventory';
+	Maqsadi (Purpose):
+	Ma’lumotlar yaxlitligini ta’minlash
+	- Masalan, Products jadvalidagi CategoryID faqat Categories jadvalidagi mavjud CategoryID qiymatlaridan biri bo‘lishi kerak.
+	“Yetim yozuvlar”ni oldini olish
+	- Bog‘liq jadvalda (Products) mavjud bo‘lgan qiymatning asosiy jadvalda (Categories) mos yozuvi yo‘q bo‘lishiga yo‘l qo‘ymaydi.
+	Avtomatik bog‘liq o‘chirish/yangi qiymat berish imkonini yaratadi
+	- ON DELETE CASCADE yoki ON UPDATE CASCADE orqali ota yozuv o‘zgarsa, bola yozuvlar ham avtomatik o‘zgaradi yoki o‘chiriladi.*/
 
---24. Alter the Inventory table to change the data type of Price from DECIMAL(10,2) to FLOAT.
-	
-	alter table Inventory
-	alter column price float;
+----------------------------------------Hard-Level Tasks (10)------------------------------------
 
---25. Add an IDENTITY column named ProductCode that starts from 1000 and increments by 5 to Inventory table.
-	
-	ALTER TABLE Inventory
-ADD ProductCode INT IDENTITY(1000, 5);
+-- 18. Write a script to create a Customers table with a CHECK constraint ensuring Age >= 18.
+
+	create table dbo.Customers (
+		CustomerID int primary key,
+		FullName varchar(100) not null,
+		Age int not null,
+		Email varchar (100),
+		Constraint CK_Customers_Age check (Age >=18)
+	);
+
+-- 19. Create a table with an IDENTITY column starting at 100 and incrementing by 10.
+
+	Create table dbo.Customers2
+		(ID int identity (100,10) primary key,
+		Name varchar (50)
+	);
+
+-- 20. Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
+
+	Create table dbo.OrderDetails (
+		OrderID int not null,
+		ProductID int not null,
+		Quantity int check (Quantity > 0),
+		Price Decimal (10,2) check (Price > 0),
+		Constraint PK_OrderDetailt primary key (OrderID, ProductID)
+	);
+
+-- 21. Explain the use of COALESCE and ISNULL functions for handling NULL values.
+
+/*
+Bu ikki funksiya — COALESCE va ISNULL — SQL Server’da NULL qiymatlarni boshqarish (ya’ni o‘rniga boshqa qiymat qo‘yish) uchun ishlatiladi.
+ISNULL(expression, replacement_value)
+Agar expression qiymati NULL bo‘lsa, u holda replacement_value qaytariladi.
+COALESCE(value1, value2, value3, ...)
+Ro‘yxatdagi birinchi NULL bo‘lmagan qiymatni qaytaradi.
+ISNULL() - Bitta ustun uchun NULLni almashtirish. Oddiy, tezkor almashtirish.
+COALESCE() - Bir nechta ustunlardan birini tanlash. Kengroq tekshiruv, kompleks so‘rovlar.
+*/
+
+-- 22. Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
+
+	create table Employees (
+		EmpID int primary key,
+		FirstName varchar(50),
+		LastName varchar(50),
+		Email varchar(100) unique
+	);
+
+-- 23. Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
+
+	alter table dbo.Employees
+	add constraint FK_Employees_Departments
+	foreign key (DepartmentID)
+	references dbo.Departments(DepartmentID)
+	on delete cascade
+	on update cascade;
